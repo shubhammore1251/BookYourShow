@@ -7,6 +7,7 @@ export type Movie = {
   posterUrl: string;
   releaseDate: string; // or Date if you plan to parse it
   voteCount: number;
+  original_language: string;
 };
 
 export interface MovieDetails {
@@ -82,4 +83,38 @@ export interface MovieData {
   crew: CrewMember[];
   reviews: Review[];
   videos: Video[];
+}
+
+export interface ShowtimeQuery {
+  movieId: number;
+  date: string; // YYYY-MM-DD format
+  location?: string;
+  showType?: string;
+}
+
+export interface ShowtimeResponse {
+  availableDates: string[];
+  showTypes: string[];
+  theaters: TheaterShowtime[];
+}
+
+export interface TheaterShowtime {
+  id: string;
+  name: string;
+  location: string;
+  address: string;
+  features: string[];
+  showtimes: ShowtimeSlot[];
+}
+
+export interface ShowtimeSlot {
+  id: string;
+  time: string;
+  showType: string;
+  price: number;
+  availableSeats: number;
+  totalSeats: number;
+  isAvailable: boolean;
+  isFastFilling: boolean;
+  features: string[];
 }

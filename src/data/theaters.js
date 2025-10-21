@@ -8,22 +8,22 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 150,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
       {
         name: "Screen 4",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 100,
       },
     ],
@@ -36,12 +36,12 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 100,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 100,
       },
     ],
@@ -54,20 +54,20 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 160,
       },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 140 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 140 },
     ],
   },
 
@@ -80,21 +80,21 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 160,
       },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 140 },
-      { name: "Screen 5", type: "['Hindi-2D', 'English-2D']", totalSeats: 120 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 140 },
+      { name: "Screen 5", type: ['Hindi-2D', 'English-2D'], totalSeats: 120 },
     ],
   },
   {
@@ -105,16 +105,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 150 },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 130 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 150 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 130 },
     ],
   },
   {
@@ -125,11 +125,11 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 160,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 140 },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 120 },
+      { name: "Screen 2", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 140 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 120 },
     ],
   },
 
@@ -142,21 +142,21 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 240,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
-      { name: "Screen 4", type: "['Hindi-2D', 'English-2D']", totalSeats: 160 },
-      { name: "Screen 5", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 140 },
+      { name: "Screen 4", type: ['Hindi-2D', 'English-2D'], totalSeats: 160 },
+      { name: "Screen 5", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 140 },
     ],
   },
   {
@@ -167,16 +167,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 190,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 170 },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 150 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 170 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 150 },
     ],
   },
   {
@@ -187,15 +187,15 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 210,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 180,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 160 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 160 },
     ],
   },
 
@@ -208,22 +208,22 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 280,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 240,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
-      { name: "Screen 4", type: "['Hindi-2D', 'English-2D']", totalSeats: 200 },
-      { name: "Screen 5", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
-      { name: "Screen 6", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 160 },
+      { name: "Screen 4", type: ['Hindi-2D', 'English-2D'], totalSeats: 200 },
+      { name: "Screen 5", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
+      { name: "Screen 6", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 160 },
     ],
   },
   {
@@ -234,16 +234,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 260,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 200 },
-      { name: "Screen 4", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 200 },
+      { name: "Screen 4", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
     ],
   },
   {
@@ -254,11 +254,11 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 190,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 170 },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 150 },
+      { name: "Screen 2", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 170 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 150 },
     ],
   },
 
@@ -271,18 +271,18 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 300,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 260,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 240 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 240 },
       {
         name: "Screen 4",
-        type: "['English-2D', 'English-3D']",
+        type: ['English-2D', 'English-3D'],
         totalSeats: 220,
       },
     ],
@@ -295,13 +295,13 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 250,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'English-2D']", totalSeats: 220 },
+      { name: "Screen 2", type: ['Hindi-2D', 'English-2D'], totalSeats: 220 },
       {
         name: "Screen 3",
-        type: "['English-2D', 'English-3D']",
+        type: ['English-2D', 'English-3D'],
         totalSeats: 200,
       },
     ],
@@ -316,20 +316,20 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 240,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
       {
         name: "Screen 3",
-        type: "['Hindi-2D', 'English-2D', 'Marathi-2D']",
+        type: ['Hindi-2D', 'English-2D', 'Marathi-2D'],
         totalSeats: 180,
       },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 160 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 160 },
     ],
   },
   {
@@ -340,19 +340,19 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 260,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 190 },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 170 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 190 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 170 },
       {
         name: "Screen 5",
-        type: "['English-2D', 'Marathi-2D']",
+        type: ['English-2D', 'Marathi-2D'],
         totalSeats: 150,
       },
     ],
@@ -367,16 +367,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 220,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
-      { name: "Screen 4", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 160 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
+      { name: "Screen 4", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 160 },
     ],
   },
   {
@@ -387,11 +387,11 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 210,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
-      { name: "Screen 3", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 160 },
+      { name: "Screen 2", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
+      { name: "Screen 3", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 160 },
     ],
   },
 
@@ -404,12 +404,12 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 200,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 180 },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 160 },
-      { name: "Screen 4", type: "['Marathi-2D', 'Hindi-2D']", totalSeats: 140 },
+      { name: "Screen 2", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 180 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 160 },
+      { name: "Screen 4", type: ['Marathi-2D', 'Hindi-2D'], totalSeats: 140 },
     ],
   },
   {
@@ -420,11 +420,11 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D'],
         totalSeats: 190,
       },
-      { name: "Screen 2", type: "['Hindi-2D', 'Marathi-2D']", totalSeats: 170 },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 150 },
+      { name: "Screen 2", type: ['Hindi-2D', 'Marathi-2D'], totalSeats: 170 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 150 },
     ],
   },
 
@@ -437,21 +437,21 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D'],
         totalSeats: 280,
       },
       {
         name: "Screen 2",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D'],
         totalSeats: 240,
       },
       {
         name: "Screen 3",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 220,
       },
-      { name: "Screen 4", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 200 },
-      { name: "Screen 5", type: "['English-2D', 'Hindi-2D']", totalSeats: 180 },
+      { name: "Screen 4", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 200 },
+      { name: "Screen 5", type: ['English-2D', 'Hindi-2D'], totalSeats: 180 },
     ],
   },
   {
@@ -462,16 +462,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D'],
         totalSeats: 260,
       },
       {
         name: "Screen 2",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 230,
       },
-      { name: "Screen 3", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 210 },
-      { name: "Screen 4", type: "['English-2D', 'Hindi-2D']", totalSeats: 190 },
+      { name: "Screen 3", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 210 },
+      { name: "Screen 4", type: ['English-2D', 'Hindi-2D'], totalSeats: 190 },
     ],
   },
 
@@ -484,19 +484,19 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D', 'Telugu-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D', 'Telugu-3D'],
         totalSeats: 320,
       },
       {
         name: "Screen 2",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 280,
       },
-      { name: "Screen 3", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 250 },
-      { name: "Screen 4", type: "['Hindi-2D', 'English-2D']", totalSeats: 220 },
+      { name: "Screen 3", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 250 },
+      { name: "Screen 4", type: ['Hindi-2D', 'English-2D'], totalSeats: 220 },
       {
         name: "Screen 5",
-        type: "['Telugu-2D', 'English-2D']",
+        type: ['Telugu-2D', 'English-2D'],
         totalSeats: 200,
       },
     ],
@@ -509,16 +509,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D'],
         totalSeats: 270,
       },
       {
         name: "Screen 2",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 240,
       },
-      { name: "Screen 3", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 210 },
-      { name: "Screen 4", type: "['English-2D', 'Hindi-2D']", totalSeats: 190 },
+      { name: "Screen 3", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 210 },
+      { name: "Screen 4", type: ['English-2D', 'Hindi-2D'], totalSeats: 190 },
     ],
   },
 
@@ -531,16 +531,16 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D', 'Telugu-3D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D', 'Telugu-3D'],
         totalSeats: 250,
       },
       {
         name: "Screen 2",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 220,
       },
-      { name: "Screen 3", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 200 },
-      { name: "Screen 4", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
+      { name: "Screen 3", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 200 },
+      { name: "Screen 4", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
     ],
   },
   {
@@ -551,19 +551,19 @@ export const theatersData = [
     screens: [
       {
         name: "Screen 1",
-        type: "['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D']",
+        type: ['Hindi-2D', 'Hindi-3D', 'English-2D', 'English-3D', 'Telugu-2D'],
         totalSeats: 240,
       },
       {
         name: "Screen 2",
-        type: "['Telugu-2D', 'Hindi-2D', 'English-2D']",
+        type: ['Telugu-2D', 'Hindi-2D', 'English-2D'],
         totalSeats: 210,
       },
-      { name: "Screen 3", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 190 },
-      { name: "Screen 4", type: "['English-2D', 'Hindi-2D']", totalSeats: 170 },
+      { name: "Screen 3", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 190 },
+      { name: "Screen 4", type: ['English-2D', 'Hindi-2D'], totalSeats: 170 },
       {
         name: "Screen 5",
-        type: "['Telugu-2D', 'English-2D']",
+        type: ['Telugu-2D', 'English-2D'],
         totalSeats: 150,
       },
     ],
@@ -574,9 +574,9 @@ export const theatersData = [
     location: "Kukatpally",
     address: "KPHB Colony, Kukatpally, Hyderabad, Telangana",
     screens: [
-      { name: "Screen 1", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 230 },
-      { name: "Screen 2", type: "['Telugu-2D', 'Hindi-2D']", totalSeats: 200 },
-      { name: "Screen 3", type: "['Hindi-2D', 'English-2D']", totalSeats: 180 },
+      { name: "Screen 1", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 230 },
+      { name: "Screen 2", type: ['Telugu-2D', 'Hindi-2D'], totalSeats: 200 },
+      { name: "Screen 3", type: ['Hindi-2D', 'English-2D'], totalSeats: 180 },
     ],
   },
 ];

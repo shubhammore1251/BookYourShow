@@ -131,6 +131,7 @@ export async function GET(req: NextRequest) {
       releaseDate: movie.release_date,
       runtime: movie.runtime,
       voteCount: movie.vote_count,
+      original_language: movie?.original_language,
     }));
 
     // cache only unfiltered requests

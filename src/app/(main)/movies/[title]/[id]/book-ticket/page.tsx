@@ -22,15 +22,43 @@ const LOCATIONS = {
   // Kolkata: ["Park Street", "Salt Lake", "Rajarhat", "Ballygunge"],
 };
 
-const DATES = [
-  { day: "SUN", date: 19, month: "OCT", label: "Today" },
-  { day: "MON", date: 20, month: "OCT" },
-  { day: "TUE", date: 21, month: "OCT" },
-  { day: "WED", date: 22, month: "OCT" },
-  { day: "THU", date: 23, month: "OCT" },
-  { day: "FRI", date: 24, month: "OCT" },
-  { day: "SAT", date: 25, month: "OCT" },
-];
+const getWeeklyDates = () => {
+  const result = [];
+  const today = new Date();
+
+  const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const monthNames = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+
+  for (let i = 0; i < 7; i++) {
+    const dateObj = new Date();
+    dateObj.setDate(today.getDate() + i);
+
+    result.push({
+      day: dayNames[dateObj.getDay()],
+      date: dateObj.getDate(),
+      month: monthNames[dateObj.getMonth()],
+      label: i === 0 ? "Today" : null,
+      blocked: i >= 4, // last 3 days blocked
+    });
+  }
+
+  return result;
+};
+
+const DATES = getWeeklyDates();
 
 const SCREEN_TYPES = [
   "Hindi - 2D",
@@ -230,11 +258,16 @@ export default function MovieTheaterListing() {
             {DATES.map((date, index) => (
               <button
                 key={index}
+                disabled={date.blocked}
                 onClick={() => setSelectedDate(index)}
                 className={`flex flex-col items-center min-w-[80px] px-4 py-2 rounded-lg transition-colors ${
                   selectedDate === index
                     ? "bg-red-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                } ${
+                  date.blocked
+                    ? "opacity-50 cursor-not-allowed"
+                    : "opacity-100 cursor-pointer"
                 }`}
               >
                 <span className="text-xs font-semibold">{date.day}</span>
@@ -292,7 +325,10 @@ export default function MovieTheaterListing() {
         ) : (
           <div className="space-y-4">
             {filteredTheaters.map((theater: any) => (
-              <div key={theater.id} className="rounded-lg shadow-sm border border-muted-foreground p-6">
+              <div
+                key={theater.id}
+                className="rounded-lg shadow-sm border border-muted-foreground p-6"
+              >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">

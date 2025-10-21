@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
 import { serialize } from "cookie";
-import { getToken } from "next-auth/jwt";
+// import { getToken } from "next-auth/jwt";
 
 export async function GET(req: NextRequest) {
   try {
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log("decoded >>> ", decoded);
+    // console.log("decoded >>> ", decoded);
 
     // check session exists in DB
     const session = await prisma.session.findFirst({
@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log("session found", session);
+    // console.log("session found", session);
     return NextResponse.json(
       { user: session.user, message: "Session found" },
       {

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,13 +11,13 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
-  emailVerified Boolean?  @default(false)
-  image         String?
   password      String?
-  accounts      Account[]
-  sessions      Session[]
-  bookings      Booking[]
+  image         String?
   createdAt     DateTime  @default(now())
+  emailVerified Boolean?  @default(false)
+  accounts      Account[]
+  bookings      Booking[]
+  sessions      Session[]
 }
 
 model Account {
@@ -32,15 +26,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? 
+  refresh_token     String?
   access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -50,8 +43,7 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -62,53 +54,52 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
 model Theater {
-  id          Int       @id @default(autoincrement())
-  name        String
-  location    String
-  city        String
-  address     String
-  screens     Screen[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  location  String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  address   String
+  screens   Screen[]
 }
 
 model Screen {
-  id          Int       @id @default(autoincrement())
-  name        String
-  type        String      // IMAX 2D, Dolby Atmos, etc
-  totalSeats  Int
-  theater     Theater     @relation(fields: [theaterId], references: [id])
-  theaterId   Int
-  shows       Show[]
+  id         Int     @id @default(autoincrement())
+  name       String
+  type       Json    @db.Json
+  totalSeats Int
+  theaterId  Int
+  theater    Theater @relation(fields: [theaterId], references: [id])
+  shows      Show[]
 }
 
 model Show {
   id          Int       @id @default(autoincrement())
-  movieId     Int        // TMDB movie ID (external)
+  movieId     Int
   language    String
   date        DateTime
   startTime   String
   endTime     String?
-  screen      Screen     @relation(fields: [screenId], references: [id])
   screenId    Int
   price       Float
-  seatsFilled Int        @default(0)
+  seatsFilled Int       @default(0)
   totalSeats  Int
   bookings    Booking[]
+  screen      Screen    @relation(fields: [screenId], references: [id])
 }
 
 model Booking {
   id          Int           @id @default(autoincrement())
-  show        Show          @relation(fields: [showId], references: [id])
   showId      Int
-  user        User          @relation(fields: [userId], references: [id])
-  userId      String
   seatsBooked Int
-  status      BookingStatus @default(CONFIRMED)
+  userId      String
   createdAt   DateTime      @default(now())
+  status      BookingStatus @default(CONFIRMED)
   updatedAt   DateTime      @updatedAt
+  show        Show          @relation(fields: [showId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
 }
 
 enum BookingStatus {

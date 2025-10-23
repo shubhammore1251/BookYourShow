@@ -1,7 +1,7 @@
 import redis from "@/lib/redis";
 
 export class CacheService {
-  private static TTL = {
+  static TTL = {
     SHOWTIMES: 300,       // 5 minutes
     AVAILABLE_DATES: 600, // 10 minutes
     SHOW_TYPES: 1800,     // 30 minutes

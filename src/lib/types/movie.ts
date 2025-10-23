@@ -87,19 +87,30 @@ export interface MovieData {
 
 export interface ShowtimeQuery {
   movieId: number;
-  date: string; // YYYY-MM-DD format
+  date: string;
   location?: string;
   showType?: string;
 }
 
 export interface ShowtimeResponse {
+  movie: MovieInfo | null;
   availableDates: string[];
   showTypes: string[];
   theaters: TheaterShowtime[];
 }
 
+export interface MovieInfo {
+  id: number;
+  title: string;
+  runtime: string;
+  rating: string;
+  genres: string[];
+  posterUrl?: string;
+  language: string;
+}
+
 export interface TheaterShowtime {
-  id: string;
+  id: number;
   name: string;
   location: string;
   address: string;
@@ -108,13 +119,13 @@ export interface TheaterShowtime {
 }
 
 export interface ShowtimeSlot {
-  id: string;
+  id: number;
   time: string;
   showType: string;
+  screenType: string[];
   price: number;
   availableSeats: number;
   totalSeats: number;
   isAvailable: boolean;
   isFastFilling: boolean;
-  features: string[];
 }

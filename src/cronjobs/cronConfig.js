@@ -2,7 +2,7 @@ import {scheduleMovies } from "@/cronjobs/cronFunction";
 
 export const cronConfig = [
   { 
-    schedule: "0 0 * * *",
+    schedule: "*/1 * * * *",
     job: scheduleMovies,
   },
 ];

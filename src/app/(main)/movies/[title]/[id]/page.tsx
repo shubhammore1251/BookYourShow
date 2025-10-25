@@ -1,5 +1,5 @@
 import React from 'react'
-import MovieDetailsPage from './MovieDetailsPage';
+import MovieDetailsPage from '../../components/MovieDetailsPage';
 import { Metadata } from 'next';
  
 type Props = {
@@ -34,9 +34,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
-
-
-
 
 const page = async ({ params }: { params: { id: string } }) => {
    const { id } = params;

@@ -1,48 +1,42 @@
-import { ShowtimeService } from '@/services/showtime-service';
-import { NextRequest, NextResponse } from 'next/server';
+import { ShowtimeService } from "@/services/showtime-service";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    
-    const movieId = Number(searchParams.get('movieId'));
-    const date = searchParams.get('date');
-    const location = searchParams.get('location');
-    const showType = searchParams.get('showType');
+    const { searchParams } = new URL(req.url);
+    const movieId = Number(searchParams.get("movieId"));
+    const date = searchParams.get("date")!;
+    const location = searchParams.get("location") || "all";
+    const showType = searchParams.get("showType") || "all";
 
-    // Validation
     if (!movieId || !date) {
       return NextResponse.json(
-        { error: 'movieId and date are required parameters' },
+        { success: false, error: "No movie ID or date provided" },
         { status: 400 }
       );
     }
 
-    // Validate date format
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      return NextResponse.json(
-        { error: 'Invalid date format. Use YYYY-MM-DD' },
-        { status: 400 }
-      );
-    }
-
-    const showtimes = await ShowtimeService.getShowtimes({
+    const data = await ShowtimeService.getShowtimes({
       movieId,
       date,
-      location: location || undefined,
-      showType: showType || undefined,
+      location,
+      showType,
     });
 
-    return NextResponse.json({
-      success: true,
-      data: showtimes,
-    });
-  } catch (error) {
-    console.error('API Error:', error);
+    // If service returned NextResponse directly
+    if (data instanceof NextResponse) return data;
+
+    console.log("Showtimes response:", data);
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (error: any) {
+    console.error("API Error:", error);
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: error instanceof Error ? error.message : 'Internal server error' 
+        message: error?.message || "Internal Server Error",
+        stack:
+          process.env.NODE_ENV === "development" ? error?.stack : undefined,
       },
       { status: 500 }
     );

@@ -21,8 +21,14 @@ import ShareSocialModal from "@/components/modals/ShareSocialModal";
 
 const ImageBaseURL = "https://image.tmdb.org/t/p";
 
-let fallbackImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpT3NuL8oMTj760VFk9yKuyn0xsPApH-rFpRAlw4Qqotev1t7Z1JR-RDCtaTpREgRmNsM";
+let fallbackImage =
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpT3NuL8oMTj760VFk9yKuyn0xsPApH-rFpRAlw4Qqotev1t7Z1JR-RDCtaTpREgRmNsM";
 
+export const formatRuntime = (minutes: any) => {
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hrs}h ${mins}m`;
+};
 
 const MovieDetailsPage = ({ id }: { id: string }) => {
   const pathname = usePathname();
@@ -88,12 +94,6 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
   };
 
   console.log("credits", credits);
-
-  const formatRuntime = (minutes: any) => {
-    const hrs = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hrs}h ${mins}m`;
-  };
 
   const formatDate = (dateString: any) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -237,9 +237,12 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
 
               {/* Buttons */}
               <div className="flex items-center gap-4">
-                <button onClick={() => {
-                  router.push(`${pathname}/book-ticket`)
-                }} className="bg-primary hover:opacity-50 text-white font-semibold px-8 py-3 rounded-lg transition text-lg cursor-pointer">
+                <button
+                  onClick={() => {
+                    router.push(`${pathname}/book-ticket`);
+                  }}
+                  className="bg-primary hover:opacity-50 text-white font-semibold px-8 py-3 rounded-lg transition text-lg cursor-pointer"
+                >
                   Book tickets
                 </button>
 
@@ -376,7 +379,7 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
             <h2 className="text-3xl font-bold">Top reviews</h2>
             <a
               href="#"
-              className="text-pink-500 hover:text-pink-400 font-semibold flex items-center gap-2"
+              className="text-accent hover:text-accent font-semibold flex items-center gap-2"
             >
               250.4K reviews
               <ChevronRight className="w-5 h-5" />
@@ -384,7 +387,7 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
           </div>
 
           <div className="mb-6 flex gap-3 flex-wrap">
-            <button className="px-4 py-2 bg-pink-500 text-white rounded-full text-sm font-semibold">
+            <button className="px-4 py-2 bg-accent text-white rounded-full text-sm font-semibold">
               #SuperDirection <span className="ml-1">184K18</span>
             </button>
             <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-full text-sm font-semibold transition">
@@ -406,10 +409,10 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
             {reviews.map((review: any) => (
               <div
                 key={review.id}
-                className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-6 border border-gray-800 hover:border-pink-500/30 transition-all"
+                className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-6 border border-gray-800 hover:border-accent/30 transition-all"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-xl font-bold flex-shrink-0">
                     {review.author.charAt(0)}
                   </div>
                   <div className="flex-1">
@@ -418,9 +421,9 @@ const MovieDetailsPage = ({ id }: { id: string }) => {
                         {review.author}
                       </div>
                       {review.author_details?.rating && (
-                        <div className="flex items-center gap-1 bg-pink-500/20 px-3 py-1 rounded-full">
-                          <Star className="w-4 h-4 text-pink-500 fill-pink-500" />
-                          <span className="text-pink-500 font-bold">
+                        <div className="flex items-center gap-1 bg-accent/20 px-3 py-1 rounded-full">
+                          <Star className="w-4 h-4 text-primary fill-accent" />
+                          <span className="text-primary font-bold">
                             {review.author_details.rating}/10
                           </span>
                         </div>

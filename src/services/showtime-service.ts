@@ -1,471 +1,239 @@
-import {
-  MovieInfo,
-  ShowtimeQuery,
-  ShowtimeResponse,
-  TheaterShowtime,
-} from "@/lib/types/movie";
 import { CacheService } from "./cache-service";
 import prisma from "@/lib/prisma";
+import axios from "axios";
+import { NextResponse } from "next/server";
 
 // export class ShowtimeService {
-//   static async getShowtimes(query: ShowtimeQuery): Promise<ShowtimeResponse> {
+//   static async getShowtimes(query: {
+//     movieId: number;
+//     date: string;
+//     location?: string;
+//     showType?: string;
+//   }) {
 //     const { movieId, date, location = "all", showType = "all" } = query;
 
-//     const cacheKey = CacheService.keys.showtimes(
-//       movieId,
-//       date,
-//       location,
-//       showType
-//     );
-//     const cached = await CacheService.get<ShowtimeResponse>(cacheKey);
-//     if (cached) {
+//     // Generate cache key
+//     const cacheKey = `showtimes:${movieId}:${date}:${location}:${showType}`;
+//     const cachedData = await CacheService.get(cacheKey);
+//     if (cachedData) {
 //       console.log("Cache HIT:", cacheKey);
-//       return cached;
+//       const response = {
+//         success: true,
+//         cached: true,
+//         data: cachedData,
+//         message: "Showtimes fetched successfully",
+//       };
+//       return response;
 //     }
 
 //     console.log("Cache MISS:", cacheKey);
 
-//     const movie = await this.getMovieDetails(movieId);
+//     // --- 1️⃣ Fetch movie details from your existing API
+//     let movie = null;
 
-//     const [shows, availableDates, showTypes] = await Promise.all([
-//       this.fetchShows(
-//         movieId,
-//         date,
-//         location !== "all" ? location : undefined,
-//         showType !== "all" ? showType : undefined
-//       ),
-//       this.getAvailableDates(
-//         movieId,
-//         location !== "all" ? location : undefined
-//       ),
-//       this.getShowTypes(movieId),
-//     ]);
-
-//     console.log("Fetched shows count:", shows.length);
-
-//     const theaterMap = new Map<number, TheaterShowtime>();
-
-//     for (const show of shows) {
-//       const theater = show.screen.theater;
-//       const theaterId = theater.id;
-
-//       if (!theaterMap.has(theaterId)) {
-//         theaterMap.set(theaterId, {
-//           id: theater.id,
-//           name: theater.name,
-//           location: theater.location,
-//           address: theater.address,
-//           features: [],
-//           showtimes: [],
-//         });
-//       }
-
-//       const theaterData = theaterMap.get(theaterId)!;
-//       const availableSeats = show.totalSeats - show.seatsFilled;
-//       const occupancyRate = (show.seatsFilled / show.totalSeats) * 100;
-
-//       theaterData.showtimes.push({
-//         id: show.id,
-//         time: show.startTime,
-//         showType: show.language,
-//         screenType: Array.isArray(show.screen.type) ? show.screen.type : [],
-//         price: show.price,
-//         availableSeats,
-//         totalSeats: show.totalSeats,
-//         isAvailable: availableSeats > 0,
-//         isFastFilling: occupancyRate > 70,
-//       });
-
-//       if (Array.isArray(show.screen.type)) {
-//         show.screen.type.forEach((feature: string) => {
-//           if (!theaterData.features.includes(feature)) {
-//             theaterData.features.push(feature);
-//           }
-//         });
-//       }
-//     }
-
-//     const response: ShowtimeResponse = {
-//       movie,
-//       availableDates,
-//       showTypes,
-//       theaters: Array.from(theaterMap.values()),
-//     };
-
-//     await CacheService.set(cacheKey, response, CacheService["TTL"].SHOWTIMES);
-//     return response;
-//   }
-
-//   private static async getMovieDetails(
-//     movieId: number
-//   ): Promise<MovieInfo | null> {
 //     try {
-//       const baseUrl =
-//         process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-//       const response = await fetch(`${baseUrl}/api/movies/${movieId}`, {
-//         next: { revalidate: 3600 },
-//       });
+//       const movieRes = await axios.get(
+//         `${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/${movieId}`
+//       );
+//       movie = movieRes.data?.data?.movieDetails || null;
+//     } catch (error: any) {
+//       if (axios.isAxiosError(error)) {
+//         if (error.response?.status === 404) {
+//           console.log("Movie not found");
+//           return NextResponse.json(
+//             { error: "Movie not found" },
+//             { status: 404 }
+//           );
+//         }
+//         console.error("Axios error:", error.message);
+//       } else {
+//         console.error("Unknown error fetching movie:", error);
+//       }
 
-//       if (!response.ok) throw new Error("Failed to fetch movie details");
-//       const data = await response.json();
-//       const movie = data.data.movieDetails;
-
-//       return {
-//         id: movie.id,
-//         title: movie.title,
-//         runtime: movie.runtime || movie.duration,
-//         rating: movie.rating || movie.certification,
-//         genres: movie.genres || [],
-//         posterUrl: movie.posterUrl || movie.poster,
-//         language: movie.original_language,
-//       };
-//     } catch (error) {
-//       console.error("Error fetching movie details:", error);
-//       return null;
+//       // You can also return an error response if it's a different type of failure
+//       return NextResponse.json(
+//         { error: "Failed to fetch movie details" },
+//         { status: 500 }
+//       );
 //     }
-//   }
 
-//   // ✅ UPDATED: Date-only filtering (ignore time)
-//   // private static async fetchShows(
-//   //   movieId: number,
-//   //   date: string,
-//   //   location?: string,
-//   //   showType?: string
-//   // ) {
-//   //   // Convert passed date (e.g. "2025-10-23") to UTC range
-//   //   const showDate = new Date(date);
-//   //   showDate.setUTCHours(0, 0, 0, 0);
+//     // --- 2️⃣ Construct date range (UTC midnight)
+//     const startOfDay = new Date(date);
+//     startOfDay.setUTCHours(0, 0, 0, 0);
+//     const endOfDay = new Date(startOfDay);
+//     endOfDay.setUTCDate(endOfDay.getUTCDate() + 1);
 
-//   //   const nextDay = new Date(showDate);
-//   //   nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-
-//   //   console.log("Fetching shows for:", { movieId, date, location, showType });
-//   //   console.log("Date range:", { showDate, nextDay });
-//   //   const whereClause: any = {
-//   //     movieId,
-//   //     startTime: {
-//   //       gte: showDate.toISOString(), // ✅ FIXED: convert Date → string
-//   //       lt: nextDay.toISOString(), // ✅ FIXED: convert Date → string
-//   //     },
-//   //   };
-
-//   //   if (showType) whereClause.language = showType;
-
-//   //   if (location) {
-//   //     whereClause.screen = {
-//   //       theater: {
-//   //         location: {
-//   //           contains: location,
-//   //           mode: "insensitive",
-//   //         },
-//   //       },
-//   //     };
-//   //   }
-
-//   //   console.log("Where clause:", JSON.stringify(whereClause, null, 2));
-
-//   //   const shows = await prisma.show.findMany({
-//   //     where: whereClause,
-//   //     include: {
-//   //       screen: { include: { theater: true } },
-//   //     },
-//   //     orderBy: [{ screen: { theater: { name: "asc" } } }, { startTime: "asc" }],
-//   //   });
-
-//   //   console.log("Found shows:", shows.length);
-//   //   if (shows.length > 0) {
-//   //     console.log("Sample show:", {
-//   //       id: shows[0].id,
-//   //       startTime: shows[0].startTime,
-//   //       theater: shows[0].screen.theater.name,
-//   //     });
-//   //   }
-
-//   //   return shows;
-//   // }
-//   private static async fetchShows(
-//     movieId: number,
-//     date: string,
-//     location?: string,
-//     showType?: string
-//   ) {
-//     const showDate = new Date(date);
-//     showDate.setUTCHours(0, 0, 0, 0);
-
-//     const nextDay = new Date(showDate);
-//     nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-
+//     // --- 3️⃣ Build Prisma where clause
 //     const whereClause: any = {
 //       movieId,
-//       startTime: {
-//         gte: showDate.toISOString(),
-//         lt: nextDay.toISOString(),
+//       date: {
+//         gte: startOfDay,
+//         lt: endOfDay,
 //       },
 //     };
 
-//     if (showType) {
-//       whereClause.language = { equals: showType, mode: "insensitive" };
+//     if (showType !== "all") {
+//       whereClause.language = {
+//         equals: showType,
+//         mode: "insensitive",
+//       };
 //     }
 
-//     if (location) {
+//     if (location !== "all") {
 //       whereClause.screen = {
 //         theater: {
-//           location: { contains: location, mode: "insensitive" },
+//           location: {
+//             contains: location,
+//             mode: "insensitive",
+//           },
 //         },
 //       };
 //     }
 
-//     console.log("Where clause:", JSON.stringify(whereClause, null, 2));
-
+//     // --- 4️⃣ Fetch shows along with theater & screen details
 //     const shows = await prisma.show.findMany({
 //       where: whereClause,
 //       include: {
 //         screen: {
-//           include: { theater: true },
+//           include: {
+//             theater: true,
+//           },
 //         },
 //       },
-//       orderBy: [{ screen: { theater: { name: "asc" } } }, { startTime: "asc" }],
-//     });
-
-//     console.log("Found shows:", shows.length);
-
-//     if (shows.length > 0) {
-//       console.log("Sample show:", {
-//         id: shows[0].id,
-//         startTime: shows[0].startTime,
-//         theater: shows[0].screen.theater.name,
-//         location: shows[0].screen.theater.location,
-//       });
-//     }
-
-//     return shows;
-//   }
-
-//   private static async getAvailableDates(movieId: number, location?: string) {
-//     const cacheKey = CacheService.keys.availableDates(
-//       movieId,
-//       location || "all"
-//     );
-//     const cached = await CacheService.get<string[]>(cacheKey);
-//     if (cached) return cached;
-
-//     const today = new Date();
-//     today.setUTCHours(0, 0, 0, 0);
-
-//     const shows = await prisma.show.findMany({
-//       where: {
-//         movieId,
-//         startTime: { gte: today.toISOString() },
-//         ...(location && {
+//       orderBy: [
+//         {
 //           screen: {
 //             theater: {
-//               location: { contains: location, mode: "insensitive" },
+//               name: "asc",
 //             },
 //           },
-//         }),
-//       },
-//       select: { startTime: true },
-//       distinct: ["startTime"],
-//       orderBy: { startTime: "asc" },
-//       take: 7,
+//         },
+//         {
+//           startTime: "asc",
+//         },
+//       ],
 //     });
 
-//     const dates = shows
-//       .map((s: any) => s.startTime?.split("T")[0])
-//       .filter(Boolean);
+//     // --- 5️⃣ Group by theater and screen
+//     const theaters = Object.values(
+//       shows.reduce((acc: any, show: any) => {
+//         const theater = show.screen.theater;
+//         if (!acc[theater.id]) {
+//           acc[theater.id] = {
+//             id: theater.id,
+//             name: theater.name,
+//             location: theater.location,
+//             address: theater.address,
+//             screens: {},
+//           };
+//         }
 
-//     await CacheService.set(
-//       cacheKey,
-//       dates,
-//       CacheService["TTL"].AVAILABLE_DATES
-//     );
-//     return dates;
-//   }
+//         const screen = show.screen;
+//         if (!acc[theater.id].screens[screen.id]) {
+//           acc[theater.id].screens[screen.id] = {
+//             id: screen.id,
+//             name: screen.name,
+//             type: screen.type,
+//             shows: [],
+//           };
+//         }
 
-//   private static async getShowTypes(movieId: number) {
-//     const cacheKey = CacheService.keys.showTypes(movieId);
-//     const cached = await CacheService.get<string[]>(cacheKey);
-//     if (cached) return cached;
+//         acc[theater.id].screens[screen.id].shows.push({
+//           id: show.id,
+//           startTime: show.startTime,
+//           endTime: show.endTime,
+//           price: show.price,
+//           language: show.language,
+//         });
 
-//     const today = new Date();
-//     today.setUTCHours(0, 0, 0, 0);
+//         return acc;
+//       }, {})
+//     ).map((theater: any) => ({
+//       ...theater,
+//       screens: Object.values(theater.screens),
+//     }));
 
-//     const shows = await prisma.show.findMany({
-//       where: { movieId, startTime: { gte: today.toISOString() } },
-//       select: { language: true },
-//       distinct: ["language"],
-//     });
+//     const data = {
+//       movie,
+//       theaters,
+//     };
+//     // --- 7️⃣ Cache result
+//     await CacheService.set(cacheKey, data, CacheService.TTL.SHOWTIMES);
 
-//     const types = shows.map((s: any) => s.language);
-//     await CacheService.set(cacheKey, types, CacheService["TTL"].SHOW_TYPES);
-//     return types;
-//   }
-
-//   static async invalidateShowtimeCache(movieId: number, date?: string) {
-//     const patterns = [`showtimes:${movieId}:*`, `dates:${movieId}:*`];
-//     if (date) patterns.push(`showtimes:${movieId}:${date}:*`);
-//     await Promise.all(patterns.map((p) => CacheService.invalidate(p)));
-//   }
-
-//   static async updateSeatAvailability(showId: number, seatsBooked: number) {
-//     const show = await prisma.show.update({
-//       where: { id: showId },
-//       data: { seatsFilled: { increment: seatsBooked } },
-//       include: { screen: { include: { theater: true } } },
-//     });
-
-//     const dateStr = new Date(show.startTime).toISOString().split("T")[0];
-//     await this.invalidateShowtimeCache(show.movieId, dateStr);
-//     return show;
+//     // --- 6️⃣ Create response
+//     const response = {
+//       success: true,
+//       cached: false,
+//       data,
+//       message: "Showtimes fetched successfully",
+//     };
+//     return response;
 //   }
 // }
+
 export class ShowtimeService {
-  static async getShowtimes(query: ShowtimeQuery): Promise<ShowtimeResponse> {
+  static async getShowtimes(query: {
+    movieId: number;
+    date: string;
+    location?: string;
+    showType?: string;
+  }) {
     const { movieId, date, location = "all", showType = "all" } = query;
 
-    const cacheKey = CacheService.keys.showtimes(
-      movieId,
-      date,
-      location,
-      showType
-    );
-
-    const cached = await CacheService.get<ShowtimeResponse>(cacheKey);
-    if (cached) {
+    const cacheKey = `showtimes:${movieId}:${date}:${location}:${showType}`;
+    const cachedData = await CacheService.get(cacheKey);
+    if (cachedData) {
       console.log("Cache HIT:", cacheKey);
-      return cached;
+      const response = {
+        success: true,
+        cached: true,
+        data: cachedData,
+        message: "Showtimes fetched successfully",
+      };
+      return response;
     }
 
     console.log("Cache MISS:", cacheKey);
 
-    const movie = await this.getMovieDetails(movieId);
-
-    const [shows, availableDates, showTypes] = await Promise.all([
-      this.fetchShows(
-        movieId,
-        date,
-        location !== "all" ? location : undefined,
-        showType !== "all" ? showType : undefined
-      ),
-      this.getAvailableDates(
-        movieId,
-        location !== "all" ? location : undefined
-      ),
-      this.getShowTypes(movieId),
-    ]);
-
-    console.log("Fetched shows count:", shows.length);
-
-    const theaterMap = new Map<number, TheaterShowtime>();
-
-    for (const show of shows) {
-      const theater = show.screen.theater;
-      const theaterId = theater.id;
-
-      if (!theaterMap.has(theaterId)) {
-        theaterMap.set(theaterId, {
-          id: theater.id,
-          name: theater.name,
-          location: theater.location,
-          address: theater.address,
-          features: [],
-          showtimes: [],
-        });
-      }
-
-      const theaterData = theaterMap.get(theaterId)!;
-      const availableSeats = show.totalSeats - show.seatsFilled;
-      const occupancyRate = (show.seatsFilled / show.totalSeats) * 100;
-
-      theaterData.showtimes.push({
-        id: show.id,
-        time: show.startTime,
-        showType: show.language,
-        screenType: Array.isArray(show.screen.type) ? show.screen.type : [],
-        price: show.price,
-        availableSeats,
-        totalSeats: show.totalSeats,
-        isAvailable: availableSeats > 0,
-        isFastFilling: occupancyRate > 70,
-      });
-
-      if (Array.isArray(show.screen.type)) {
-        show.screen.type.forEach((feature: string) => {
-          if (!theaterData.features.includes(feature)) {
-            theaterData.features.push(feature);
-          }
-        });
-      }
-    }
-
-    const response: ShowtimeResponse = {
-      movie,
-      availableDates,
-      showTypes,
-      theaters: Array.from(theaterMap.values()),
-    };
-
-    await CacheService.set(cacheKey, response, CacheService.TTL.SHOWTIMES);
-    return response;
-  }
-
-  private static async getMovieDetails(
-    movieId: number
-  ): Promise<MovieInfo | null> {
+    // --- 1️⃣ Fetch movie details from existing movie API
+    let movie = null;
     try {
-      const baseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-      const response = await fetch(`${baseUrl}/api/movies/${movieId}`, {
-        next: { revalidate: 3600 },
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch movie details");
-      const data = await response.json();
-      const movie = data.data.movieDetails;
-
-      return {
-        id: movie.id,
-        title: movie.title,
-        runtime: movie.runtime || movie.duration,
-        rating: movie.rating || movie.certification,
-        genres: movie.genres || [],
-        posterUrl: movie.posterUrl || movie.poster,
-        language: movie.original_language,
-      };
-    } catch (error) {
-      console.error("Error fetching movie details:", error);
-      return null;
+      const movieRes = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/${movieId}`
+      );
+      movie = movieRes.data?.data?.movieDetails || null;
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        console.log("Movie not found");
+        return NextResponse.json({ error: "Movie not found" }, { status: 404 });
+      }
+      console.error("Movie fetch error:", error.message);
+      return NextResponse.json(
+        { error: "Failed to fetch movie details" },
+        { status: 500 }
+      );
     }
-  }
 
-  private static async fetchShows(
-    movieId: number,
-    date: string,
-    location?: string,
-    showType?: string
-  ) {
-    // Convert passed date (YYYY-MM-DD) to UTC range
-    const showDate = new Date(date);
-    showDate.setUTCHours(0, 0, 0, 0);
+    // --- 2️⃣ Construct date range
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setUTCDate(endOfDay.getUTCDate() + 1);
 
-    const nextDay = new Date(showDate);
-    nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-
-    console.log("Fetching shows for:", { movieId, date, location, showType });
-    console.log("Date range:", { showDate, nextDay });
-
+    // --- 3️⃣ Build where clause
     const whereClause: any = {
       movieId,
-      startTime: {
-        gte: showDate.toISOString(),
-        lt: nextDay.toISOString(),
+      date: {
+        gte: startOfDay,
+        lt: endOfDay,
       },
     };
 
-    if (showType) whereClause.language = showType;
+    if (showType !== "all") {
+      whereClause.language = { equals: showType, mode: "insensitive" };
+    }
 
-    if (location) {
-      // Directly filter the nested relation (screen -> theater)
+    if (location !== "all") {
       whereClause.screen = {
         theater: {
           location: {
@@ -476,103 +244,105 @@ export class ShowtimeService {
       };
     }
 
+    // --- 4️⃣ Fetch all shows (with theater & screen)
     const shows = await prisma.show.findMany({
       where: whereClause,
       include: {
         screen: {
-          include: { theater: true },
+          include: {
+            theater: true,
+          },
         },
       },
-      orderBy: [{ screen: { theater: { name: "asc" } } }, { startTime: "asc" }],
-    });
-
-    console.log("Found shows:", shows.length);
-    return shows;
-  }
-
-  // ✅ Get available dates for a movie (with optional location filter)
-  private static async getAvailableDates(movieId: number, location?: string) {
-    const cacheKey = CacheService.keys.availableDates(
-      movieId,
-      location || "all"
-    );
-    const cached = await CacheService.get<string[]>(cacheKey);
-    if (cached) return cached;
-
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    const whereClause: any = {
-      movieId,
-      startTime: { gte: today.toISOString() },
-    };
-
-    if (location) {
-      whereClause.screen = {
-        theater: {
-          location: { contains: location, mode: "insensitive" },
+      orderBy: [
+        {
+          screen: {
+            theater: {
+              name: "asc",
+            },
+          },
         },
-      };
-    }
-
-    const shows = await prisma.show.findMany({
-      where: whereClause,
-      select: { startTime: true },
-      distinct: ["startTime"], // Prisma v6 supports distinct on single fields
-      orderBy: { startTime: "asc" },
-      take: 7,
+        {
+          startTime: "asc",
+        },
+      ],
     });
 
-    // Only map valid startTimes
-    const dates = shows
-      .map((s: any) => {
-        if (!s.startTime) return null;
-        const start: Date =
-          s.startTime instanceof Date ? s.startTime : new Date(s.startTime);
-        return isNaN(start.getTime())
-          ? null
-          : start.toISOString().split("T")[0];
-      })
-      .filter(Boolean);
-
-    await CacheService.set(cacheKey, dates, CacheService.TTL.SHOWTIMES);
-    return dates;
-  }
-
-  private static async getShowTypes(movieId: number) {
-    const cacheKey = CacheService.keys.showTypes(movieId);
-    const cached = await CacheService.get<string[]>(cacheKey);
-    if (cached) return cached;
-
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    const shows = await prisma.show.findMany({
-      where: { movieId, startTime: { gte: today.toISOString() } },
-      select: { language: true },
-      distinct: ["language"],
+    // --- 5️⃣ Aggregate confirmed bookings per show
+    const bookingSums = await prisma.booking.groupBy({
+      by: ["showId"],
+      _sum: { seatsBooked: true },
+      where: {
+        status: "CONFIRMED",
+        showId: { in: shows.map((s:any) => s.id) },
+      },
     });
 
-    const types = shows.map((s: any) => s.language);
-    await CacheService.set(cacheKey, types, CacheService.TTL.SHOW_TYPES);
-    return types;
-  }
+    const bookingMap = bookingSums.reduce((acc:any, b:any) => {
+      acc[b.showId] = b._sum.seatsBooked || 0;
+      return acc;
+    }, {} as Record<number, number>);
 
-  static async invalidateShowtimeCache(movieId: number, date?: string) {
-    const patterns = [`showtimes:${movieId}:*`, `dates:${movieId}:*`];
-    if (date) patterns.push(`showtimes:${movieId}:${date}:*`);
-    await Promise.all(patterns.map((p) => CacheService.invalidate(p)));
-  }
+    // --- 6️⃣ Group shows by theater and screen
+    const theaters = Object.values(
+      shows.reduce((acc: any, show: any) => {
+        const theater = show.screen.theater;
 
-  static async updateSeatAvailability(showId: number, seatsBooked: number) {
-    const show = await prisma.show.update({
-      where: { id: showId },
-      data: { seatsFilled: { increment: seatsBooked } },
-      include: { screen: { include: { theater: true } } },
-    });
+        if (!acc[theater.id]) {
+          acc[theater.id] = {
+            id: theater.id,
+            name: theater.name,
+            location: theater.location,
+            address: theater.address,
+            screens: {},
+          };
+        }
 
-    const dateStr = new Date(show.startTime).toISOString().split("T")[0];
-    await this.invalidateShowtimeCache(show.movieId, dateStr);
-    return show;
+        const screen = show.screen;
+        if (!acc[theater.id].screens[screen.id]) {
+          acc[theater.id].screens[screen.id] = {
+            id: screen.id,
+            name: screen.name,
+            type: screen.type,
+            shows: [],
+          };
+        }
+
+        const seatsBooked = bookingMap[show.id] || 0;
+        const availableSeats = show.totalSeats - seatsBooked;
+
+        acc[theater.id].screens[screen.id].shows.push({
+          id: show.id,
+          startTime: show.startTime,
+          endTime: show.endTime,
+          price: show.price,
+          language: show.language,
+          totalSeats: show.totalSeats,
+          seatsBooked,
+          availableSeats,
+        });
+
+        return acc;
+      }, {})
+    ).map((theater: any) => ({
+      ...theater,
+      screens: Object.values(theater.screens),
+    }));
+
+    const data = {
+      movie,
+      theaters,
+    };
+    // --- 7️⃣ Cache result
+    await CacheService.set(cacheKey, data, CacheService.TTL.SHOWTIMES);
+
+    // --- 6️⃣ Create response
+    const response = {
+      success: true,
+      cached: false,
+      data,
+      message: "Showtimes fetched successfully",
+    };
+    return response;
   }
 }

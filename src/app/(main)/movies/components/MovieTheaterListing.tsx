@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { formatRuntime } from "./MovieDetailsPage";
+import { useRouter } from "next/navigation";
 // Dummy data
 const LOCATIONS = {
   Mumbai: ["Kalyan", "Thane", "Navi Mumbai", "Andheri", "Bandra"],
@@ -229,6 +230,7 @@ const mapApiToFrontend = (apiData: any) => {
         screen.shows.forEach((show: any) => {
           if (show.language && type.includes(show.language)) {
             showTimes[type].push({
+              showId: show.id,
               time: formatTo12Hour(show.startTime), // 👈 formatted here
               endTime: formatTo12Hour(show.endTime), // 👈 and here
               price: show.price,
@@ -261,6 +263,7 @@ const mapApiToFrontend = (apiData: any) => {
 };
 
 export default function MovieTheaterListing({ id }: { id: string }) {
+  const router = useRouter();
   const [selectedRegion, setSelectedRegion] = useState("Mumbai");
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -466,6 +469,11 @@ export default function MovieTheaterListing({ id }: { id: string }) {
                                   ? "border-yellow-400 bg-yellow-50 text-yellow-600"
                                   : "border-green-500 bg-green-50 text-green-700"
                               }`}
+                              onClick={() => {
+                                router.push(
+                                  `/movies/seat-layout/${selectedCity?.toLowerCase()}/${movieDetails?.id}/${show.showId}/${selectedDateValue}`
+                                );
+                              }}
                             >
                               <div>{show.time}</div>
                               {show.label && (

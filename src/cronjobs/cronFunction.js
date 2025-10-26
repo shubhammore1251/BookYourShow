@@ -1,14 +1,19 @@
 import { deleteExpiredShows, generateShowsOptimized } from "@/lib/scheduleShows";
 
-export async function scheduleMovies() {
-  console.log("Starting show update cron job...");
+export async function deleteScheduledShows() {
+  console.log("Starting scheduled show deletion cron job...");
 
-  // Step 1: Delete expired shows
   const deletedCount = await deleteExpiredShows();
 
   console.log(`Deleted ${deletedCount} expired shows`);
 
-  // Step 2: Generate new shows
+  console.log("Cron job completed successfully");
+}
+
+export async function scheduleMovies() {
+  console.log("Starting show update cron job...");
+
+  // Generate new shows
   const { created, skipped } = await generateShowsOptimized();
 
   console.log(`Generated ${created} new shows`);

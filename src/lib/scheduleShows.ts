@@ -121,18 +121,33 @@ function getPriceForTimeSlot(startTime: string): number {
 // }
 async function deleteExpiredShows() {
   const nowIST = DateTime.now().setZone("Asia/Kolkata");
-  const todayDate = nowIST.startOf("day").toJSDate();
-  const currentTime = nowIST.toFormat("HH:mm");
+  
+  // Get today's date at midnight in IST, then convert to UTC for DB comparison
+  const todayISTMidnight = nowIST.startOf("day");
+  const todayUTC = todayISTMidnight.toUTC().toJSDate(); // Start of today in IST -> UTC
+  
+  // Get tomorrow's date at midnight in IST, then convert to UTC
+  const tomorrowISTMidnight = todayISTMidnight.plus({ days: 1 });
+  const tomorrowUTC = tomorrowISTMidnight.toUTC().toJSDate(); // Start of tomorrow in IST -> UTC
+  
+  const currentTime = nowIST.toFormat("HH:mm"); // Current IST time (e.g., "20:00")
+
+  console.log("todayUTC", todayUTC);
+  console.log("tomorrowUTC", tomorrowUTC);
+  console.log("currentTime IST", currentTime);
 
   try {
     const deleted = await prisma.show.deleteMany({
       where: {
         OR: [
-          { date: { lt: todayDate } }, // older than today
+          // Delete all shows before today
+          { date: { lt: todayUTC } },
+          // Delete today's shows where startTime has passed
           {
             AND: [
-              { date: todayDate }, // same day but time passed
-              { startTime: { lt: currentTime } },
+              { date: { gte: todayUTC } },
+              { date: { lt: tomorrowUTC } },
+              { startTime: { lt: currentTime } }
             ],
           },
         ],
@@ -140,10 +155,8 @@ async function deleteExpiredShows() {
     });
 
     console.log(`🗑️ Deleted ${deleted.count} expired shows`);
-    return deleted.count;
   } catch (err) {
     console.error("❌ Error deleting expired shows:", err);
-    return 0;
   }
 }
 
@@ -793,7 +806,9 @@ async function generateShowsOptimized() {
       weight: Math.max(1, Math.round((m?.vote_average ?? 1) * 2)),
     }));
 
-    const theaters = await prisma.theater.findMany({ include: { screens: true } });
+    const theaters = await prisma.theater.findMany({
+      include: { screens: true },
+    });
     if (!theaters.length) return { created: 0, skipped: 0 };
 
     const nowIST = DateTime.now().setZone("Asia/Kolkata");
@@ -811,34 +826,57 @@ async function generateShowsOptimized() {
     // Preload existing shows for quick duplicate checks
     const allExistingShows = await prisma.show.findMany({
       where: {
-        date: { gte: dayInfos[0].startUTC, lte: dayInfos[DAYS_AHEAD - 1].endUTC },
+        date: {
+          gte: dayInfos[0].startUTC,
+          lte: dayInfos[DAYS_AHEAD - 1].endUTC,
+        },
       },
-      select: { id: true, screenId: true, date: true, startTime: true, language: true },
+      select: {
+        id: true,
+        screenId: true,
+        date: true,
+        startTime: true,
+        language: true,
+      },
     });
     const existingSet = new Set<string>();
-    for (const s of allExistingShows) existingSet.add(`${s.screenId}|${s.date.toISOString()}|${s.startTime}|${s.language}`);
+    for (const s of allExistingShows)
+      existingSet.add(
+        `${s.screenId}|${s.date.toISOString()}|${s.startTime}|${s.language}`
+      );
 
     // Build weighted movie queue
     let totalSlots = 0;
     for (const theater of theaters) {
-      const slotKey: SlotKey = Object.keys(THEATER_TIME_SLOTS)[theater.id % Object.keys(THEATER_TIME_SLOTS).length] as SlotKey;
+      const slotKey: SlotKey = Object.keys(THEATER_TIME_SLOTS)[
+        theater.id % Object.keys(THEATER_TIME_SLOTS).length
+      ] as SlotKey;
       const tslots = THEATER_TIME_SLOTS[slotKey] ?? [];
-      for (const screen of theater.screens) totalSlots += tslots.length * DAYS_AHEAD;
+      for (const screen of theater.screens)
+        totalSlots += tslots.length * DAYS_AHEAD;
     }
     const baselinePerMovie = MIN_SHOWS_PER_MOVIE_PER_DAY * DAYS_AHEAD;
-    const minQueueLength = Math.max(totalSlots, baselinePerMovie * movies.length);
+    const minQueueLength = Math.max(
+      totalSlots,
+      baselinePerMovie * movies.length
+    );
     const movieQueue = weightedRepeat(moviesWithWeight, minQueueLength);
 
     // Redis usage counts
     const persistedUsage = await redis.hgetall(MOVIE_USAGE_HASH);
     const usageCounts: Record<string, number> = {};
-    for (const m of movies) usageCounts[m.id] = parseInt(persistedUsage[m.id] || "0", 10);
+    for (const m of movies)
+      usageCounts[m.id] = parseInt(persistedUsage[m.id] || "0", 10);
 
     // Precompute theater timeslots
     const theaterSlotMap: Record<number, string[]> = {};
     for (const theater of theaters) {
-      const slotKey: SlotKey = Object.keys(THEATER_TIME_SLOTS)[theater.id % Object.keys(THEATER_TIME_SLOTS).length] as SlotKey;
-      const tslots = [...(THEATER_TIME_SLOTS[slotKey] ?? [])].sort((a, b) => parseInt(a.replace(":", "")) - parseInt(b.replace(":", "")));
+      const slotKey: SlotKey = Object.keys(THEATER_TIME_SLOTS)[
+        theater.id % Object.keys(THEATER_TIME_SLOTS).length
+      ] as SlotKey;
+      const tslots = [...(THEATER_TIME_SLOTS[slotKey] ?? [])].sort(
+        (a, b) => parseInt(a.replace(":", "")) - parseInt(b.replace(":", ""))
+      );
       theaterSlotMap[theater.id] = tslots;
     }
 
@@ -849,7 +887,8 @@ async function generateShowsOptimized() {
       let best: any = null;
       let bestScore = Infinity;
       for (let i = 0; i < sample; i++) {
-        const candidate = movieQueue[Math.floor(Math.random() * movieQueue.length)];
+        const candidate =
+          movieQueue[Math.floor(Math.random() * movieQueue.length)];
         const usage = usageCounts[candidate.id] || 0;
         if (usage < bestScore) {
           best = candidate;
@@ -860,9 +899,16 @@ async function generateShowsOptimized() {
     }
 
     const langMap: Record<string, string> = {
-      en: "English", hi: "Hindi", te: "Telugu", ta: "Tamil",
-      kn: "Kannada", ml: "Malayalam", mr: "Marathi", bn: "Bengali",
-      gu: "Gujarati", pa: "Punjabi",
+      en: "English",
+      hi: "Hindi",
+      te: "Telugu",
+      ta: "Tamil",
+      kn: "Kannada",
+      ml: "Malayalam",
+      mr: "Marathi",
+      bn: "Bengali",
+      gu: "Gujarati",
+      pa: "Punjabi",
     };
 
     // Core loop: days -> theaters -> screens -> timeslots -> screenTypes
@@ -873,7 +919,9 @@ async function generateShowsOptimized() {
         if (!timeSlots?.length) continue;
 
         for (const screen of theater.screens) {
-          const screenTypes: string[] = Array.isArray(screen.type) ? screen.type : [];
+          const screenTypes: string[] = Array.isArray(screen.type)
+            ? screen.type
+            : [];
           if (!screenTypes.length) continue;
 
           let lastMovieId: number | null = null;
@@ -900,7 +948,10 @@ async function generateShowsOptimized() {
                 if (candidate.id === lastMovieId) continue;
 
                 const movieLang = langMap[candidate.original_language] || null;
-                if (movieLang && screenType.toLowerCase().startsWith(movieLang.toLowerCase())) {
+                if (
+                  movieLang &&
+                  screenType.toLowerCase().startsWith(movieLang.toLowerCase())
+                ) {
                   movie = candidate;
                 } else if (!movie) movie = candidate;
               }
@@ -939,17 +990,23 @@ async function generateShowsOptimized() {
       } catch (err) {
         console.error("Batch create error:", err);
         for (const b of batch) {
-          try { await prisma.show.create({ data: b }); created++; } catch {}
+          try {
+            await prisma.show.create({ data: b });
+            created++;
+          } catch {}
         }
       }
     }
 
     // Persist usage counts
     const multi = redis.multi();
-    for (const [mid, count] of Object.entries(usageCounts)) multi.hset(MOVIE_USAGE_HASH, mid, String(count));
+    for (const [mid, count] of Object.entries(usageCounts))
+      multi.hset(MOVIE_USAGE_HASH, mid, String(count));
     await multi.exec();
 
-    console.log(`✅ generateShows completed: created ~${created}, planned: ${toCreate.length}`);
+    console.log(
+      `✅ generateShows completed: created ~${created}, planned: ${toCreate.length}`
+    );
     return { created, planned: toCreate.length };
   } finally {
     await releaseLock();
